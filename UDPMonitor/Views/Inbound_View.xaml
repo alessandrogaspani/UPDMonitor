@@ -1,0 +1,156 @@
+﻿<UserControl x:Class="UDPMonitor.Views.Inbound_View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Connection panel -->
+        <Border Grid.Row="0"
+                Padding="10"
+                CornerRadius="6"
+                BorderBrush="#33000000"
+                BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           VerticalAlignment="Center"
+                           Text="Port:" />
+
+                <TextBox Grid.Column="1"
+                         VerticalAlignment="Center"
+                         MinWidth="90"
+                         Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}" />
+
+                <Button Grid.Column="3"
+                        VerticalAlignment="Center"
+                        Padding="14,6"
+                        Command="{Binding ConnectCommand}">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Content" Value="Connect"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                    <Setter Property="Content" Value="Disconnect"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!-- Status badge -->
+                <Border Grid.Column="5"
+                        Margin="10,0,0,0"
+                        Padding="10,4"
+                        CornerRadius="10"
+                        VerticalAlignment="Center">
+                    <Border.Style>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="Background" Value="#12AA0000"/>
+                            <Setter Property="BorderBrush" Value="#33AA0000"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                    <Setter Property="Background" Value="#1200AA00"/>
+                                    <Setter Property="BorderBrush" Value="#3300AA00"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+
+                    <TextBlock>
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Text" Value="Disconnected"/>
+                                <Setter Property="Foreground" Value="#AA0000"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                        <Setter Property="Text" Value="Connected"/>
+                                        <Setter Property="Foreground" Value="#008800"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Border>
+
+            </Grid>
+        </Border>
+
+        <!-- Messages list -->
+        <Border Grid.Row="2"
+                Padding="6"
+                CornerRadius="6"
+                BorderBrush="#33000000"
+                BorderThickness="1">
+            
+            <ListView ItemsSource="{Binding InMessages}"
+                      Name="MessagesList"
+                      VirtualizingPanel.IsVirtualizing="True"
+                      VirtualizingPanel.VirtualizationMode="Recycling"
+                      SelectedItem="{Binding MessageSelected}"
+                      ScrollViewer.CanContentScroll="True">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseDoubleClick">
+                        <i:InvokeCommandAction Command="{Binding ShowDetailCommand}"
+                                           CommandParameter="{Binding SelectedItem, ElementName=MessagesList}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+                <ListView.ContextMenu>
+                    <!-- Bridge: ContextMenu non eredita DataContext -->
+                    <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+
+                        <MenuItem Header="Show detail"
+                       Command="{Binding ShowDetailCommand}"
+                       CommandParameter="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+
+                        <MenuItem Header="Copy selected"
+                      Command="{Binding CopySelectedCommand}"
+                      CommandParameter="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+
+                      
+                        <Separator/>
+                        <MenuItem Header="Clear"
+                      Command="{Binding ClearCommand}" />
+                    </ContextMenu>
+                </ListView.ContextMenu>
+
+
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Time"
+                                        Width="170"
+                                        DisplayMemberBinding="{Binding TimeStamp}" />
+                        <GridViewColumn Header="Message" Width="Auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Text}"
+                                               TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+
+            </ListView>
+        </Border>
+
+    </Grid>
+</UserControl>

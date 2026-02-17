@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="UDPMonitor.Views.MessageDetail_View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="12"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0"
+                Padding="10"
+                CornerRadius="6"
+                BorderBrush="#33000000"
+                BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           VerticalAlignment="Center"
+                           FontWeight="SemiBold"
+                           Text="Timestamp:" />
+
+                <TextBlock Grid.Column="2"
+                           VerticalAlignment="Center"
+                           Text="{Binding TimeStamp}" />
+            </Grid>
+        </Border>
+
+        <!-- Body -->
+        <Border Grid.Row="2"
+                Padding="10"
+                CornerRadius="6"
+                BorderBrush="#33000000"
+                BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="6"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           FontWeight="SemiBold"
+                           Foreground="#88000000"
+                           Text="Message" />
+
+                <TextBox Grid.Row="2"
+                         Text="{Binding Text}"
+                         IsReadOnly="True"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Auto"
+                         HorizontalScrollBarVisibility="Auto"
+                         BorderThickness="0"
+                         Background="Transparent" />
+            </Grid>
+        </Border>
+
+        <!-- Bottom buttons -->
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Foreground="#88000000"
+                       Text="Double-click a row to open details." />
+
+            <!-- Chiude la dialog Prism: ButtonResult=OK -->
+            <Button Grid.Column="1"
+                    Padding="18,8"
+                    Content="Close"
+                    Command="{Binding CloseCommand}" />
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36717.8 d17.14
+VisualStudioVersion = 17.14.36717.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UDPMonitor", "UDPMonitor\UDPMonitor.csproj", "{77CC79FF-0066-4201-A182-D4489E2D7154}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UDPMonitor.Core", "UDPMonitor.Core\UDPMonitor.Core.csproj", "{8E698ECA-426B-45C4-97DB-CCB9E6A310A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UDPMonitor.Business", "UDPMonitor.Business\UDPMonitor.Business.csproj", "{8DD14D00-5A76-406D-A1C1-DD0BBD31944D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{77CC79FF-0066-4201-A182-D4489E2D7154}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77CC79FF-0066-4201-A182-D4489E2D7154}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77CC79FF-0066-4201-A182-D4489E2D7154}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E698ECA-426B-45C4-97DB-CCB9E6A310A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E698ECA-426B-45C4-97DB-CCB9E6A310A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E698ECA-426B-45C4-97DB-CCB9E6A310A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E698ECA-426B-45C4-97DB-CCB9E6A310A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DD14D00-5A76-406D-A1C1-DD0BBD31944D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DD14D00-5A76-406D-A1C1-DD0BBD31944D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DD14D00-5A76-406D-A1C1-DD0BBD31944D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DD14D00-5A76-406D-A1C1-DD0BBD31944D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

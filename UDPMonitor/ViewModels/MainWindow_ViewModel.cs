@@ -1,19 +1,19 @@
-﻿using Prism.Mvvm;
+﻿using UDPMonitor.ViewModels.Base;
 
 namespace UDPMonitor.ViewModels
 {
-    public class MainWindowViewModel : BindableBase
+    public class MainWindow_ViewModel : ViewModelBase
     {
-        private string _title = "Prism Application";
+        private string _title = "UDPMonitor";
+
         public string Title
         {
             get { return _title; }
             set { SetProperty(ref _title, value); }
         }
 
-        public MainWindowViewModel()
+        public MainWindow_ViewModel()
         {
-
         }
     }
 }

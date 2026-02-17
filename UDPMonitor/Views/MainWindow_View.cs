@@ -5,9 +5,9 @@ namespace UDPMonitor.Views
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow_View : Window
     {
-        public MainWindow()
+        public MainWindow_View()
         {
             InitializeComponent();
         }

@@ -1,15 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
-    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
     <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\UDPMonitor.Business\UDPMonitor.Business.csproj" />
     <ProjectReference Include="..\UDPMonitor.Core\UDPMonitor.Core.csproj" />
   </ItemGroup>
+
 </Project>
