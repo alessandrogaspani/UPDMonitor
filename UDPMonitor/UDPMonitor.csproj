@@ -12,4 +12,7 @@
     <ProjectReference Include="..\UDPMonitor.Business\UDPMonitor.Business.csproj" />
     <ProjectReference Include="..\UDPMonitor.Core\UDPMonitor.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Behaviors\" />
+  </ItemGroup>
 </Project>

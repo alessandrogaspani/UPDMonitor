@@ -4,6 +4,17 @@
              xmlns:local="clr-namespace:UDPMonitor"
              xmlns:prism="http://prismlibrary.com/" >
     <Application.Resources>
-         
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/Brushes.xaml"/>
+                <ResourceDictionary Source="/Styles/Borders.xaml"/>
+                <ResourceDictionary Source="/Styles/Textblocks.xaml"/>
+                <ResourceDictionary Source="/Styles/Textboxes.xaml"/>
+                <ResourceDictionary Source="/Styles/Buttons.xaml"/>
+                <ResourceDictionary Source="/Styles/Scrollbars.xaml"/>
+                <ResourceDictionary Source="/Styles/ListViews.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

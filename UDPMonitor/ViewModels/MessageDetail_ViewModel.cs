@@ -7,25 +7,23 @@ namespace UDPMonitor.ViewModels
 {
     public class MessageDetail_ViewModel : BindableBase, IDialogAware
     {
-        private string _timeStamp;
-
-        public string TimeStamp
+        private DateTime _timeStamp;
+        public DateTime TimeStamp
         {
-            get { return _timeStamp; }
-            set { SetProperty(ref _timeStamp, value); }
+            get => _timeStamp;
+            set => SetProperty(ref _timeStamp, value);
         }
 
         private string _text;
-
         public string Text
         {
-            get { return _text; }
-            set { SetProperty(ref _text, value); }
+            get => _text;
+            set => SetProperty(ref _text, value);
         }
 
         public string Title => "Details";
 
-        public DelegateCommand CloseCommand { get; private set; }
+        public DelegateCommand CloseCommand { get; }
 
         public MessageDetail_ViewModel()
         {
@@ -34,10 +32,7 @@ namespace UDPMonitor.ViewModels
 
         public event Action<IDialogResult> RequestClose;
 
-        public bool CanCloseDialog()
-        {
-            return true;
-        }
+        public bool CanCloseDialog() => true;
 
         public void OnDialogClosed()
         {
@@ -47,6 +42,7 @@ namespace UDPMonitor.ViewModels
         public void OnDialogOpened(IDialogParameters parameters)
         {
             var message = parameters.GetValue<ODTMessage>("message");
+            if (message == null) return;
 
             TimeStamp = message.TimeStamp;
             Text = message.Text;

@@ -3,7 +3,10 @@ using Prism.Regions;
 using System;
 using System.Windows;
 using UDPMonitor.Business;
+using UDPMonitor.Business.Config;
 using UDPMonitor.Business.Interfaces;
+using UDPMonitor.Core;
+using UDPMonitor.Core.Configuration;
 using UDPMonitor.ViewModels;
 using UDPMonitor.Views;
 
@@ -38,9 +41,15 @@ namespace UDPMonitor
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            RegisterConfigManager(containerRegistry);
             RegisterPages(containerRegistry);
             RegisterDialogs(containerRegistry);
             RegisterServices(containerRegistry);
+        }
+
+        private void RegisterConfigManager(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.RegisterSingleton<IConfigurationManager<UDPManagerConfiguration>>(ConfigurationFactory);
         }
 
         private void RegisterDialogs(IContainerRegistry containerRegistry)
@@ -50,8 +59,18 @@ namespace UDPMonitor
 
         private static void RegisterServices(IContainerRegistry containerRegistry)
         {
-            containerRegistry.Register<IInboundService, InboundService>();
-            containerRegistry.Register<IOutboundService, OutboundService>();
+          
+            containerRegistry.RegisterSingleton<IInboundService, InboundService>();
+            containerRegistry.RegisterSingleton<IOutboundService, OutboundService>();
+        }
+
+        private static IConfigurationManager<UDPManagerConfiguration> ConfigurationFactory(IContainerProvider containerProvider)
+        {
+            var configManager = new ConfigFile_JsonConfigManager(@$"{ApplicationService.ConfigFolderPath}\config.json");
+
+            configManager.ReadFromFile();
+
+            return configManager;
         }
 
         private static void RegisterPages(IContainerRegistry containerRegistry)

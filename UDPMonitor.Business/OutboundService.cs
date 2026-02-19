@@ -1,4 +1,6 @@
-﻿using UDPMonitor.Business.Interfaces;
+﻿using UDPMonitor.Business.Config;
+using UDPMonitor.Business.Interfaces;
+using UDPMonitor.Core.Configuration;
 using UDPMonitor.Core.Network.Udp;
 
 namespace UDPMonitor.Business
@@ -9,13 +11,18 @@ namespace UDPMonitor.Business
 
         public event OutMessageSentEventHandler OnOutMessageSent;
 
-        public OutboundService()
+        public int Port { get; set; }
+        public string IPAddress { get; set; }
+
+        public OutboundService(IConfigurationManager<UDPManagerConfiguration> configManager)
         {
+            Port = configManager.Configuration.Outbound.Port;
+            IPAddress = configManager.Configuration.Outbound.IP;
         }
 
-        public void Connect(string ipAddress, int port)
+        public void Connect()
         {
-            UdpService.AddOutChannel(OutChanngelTag, port, ipAddress, OnMessageSent);
+            UdpService.AddOutChannel(OutChanngelTag, Port, IPAddress, OnMessageSent);
         }
 
         private void OnMessageSent(byte[] data)

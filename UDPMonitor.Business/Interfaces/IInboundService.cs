@@ -8,7 +8,10 @@ namespace UDPMonitor.Business.Interfaces
     {
         event InMessageReceivedEventHandler OnInboundMessageReceived;
 
-        void StartListen(int port);
-        void StopListen(string port);
+        public int Port { get; set; }
+
+        void StartListen();
+
+        void StopListen();
     }
 }

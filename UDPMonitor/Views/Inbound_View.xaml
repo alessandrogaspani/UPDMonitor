@@ -3,50 +3,62 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             prism:ViewModelLocator.AutoWireViewModel="True">
+             xmlns:converters ="clr-namespace:UDPMonitor.Converters"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             Background="{StaticResource Brush.Surface}">
+
+    <UserControl.Resources>
+        <converters:RelativeTimeHumanConverter x:Key="RelativeTimeHumanConverter" />
+        <converters:DateTimeSmartConverter x:Key="DateTimeSmartConverter" />
+    </UserControl.Resources>
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="10"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- Connection panel -->
         <Border Grid.Row="0"
+                Style="{StaticResource Panel.Border}"
                 Padding="10"
                 CornerRadius="6"
-                BorderBrush="#33000000"
                 BorderThickness="1">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="120"/>
-                    <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="120" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0"
                            VerticalAlignment="Center"
-                           Text="Port:" />
+                           Text="Port:"
+                           Style="{StaticResource Text.Secondary}" />
 
                 <TextBox Grid.Column="1"
+                         Style="{StaticResource TextBox.Mono}"
                          VerticalAlignment="Center"
                          MinWidth="90"
                          Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}" />
 
                 <Button Grid.Column="3"
+                        Width="100"
                         VerticalAlignment="Center"
                         Padding="14,6"
                         Command="{Binding ConnectCommand}">
                     <Button.Style>
-                        <Style TargetType="{x:Type Button}">
-                            <Setter Property="Content" Value="Connect"/>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Button.Secondary}">
+                            <Setter Property="Content" Value="Connect" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsConnected}" Value="True">
-                                    <Setter Property="Content" Value="Disconnect"/>
+                                    <Setter Property="Content" Value="Disconnect" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -55,40 +67,41 @@
 
                 <!-- Status badge -->
                 <Border Grid.Column="5"
-                        Margin="10,0,0,0"
+                        Margin="0,0,0,0"
                         Padding="10,4"
                         CornerRadius="10"
-                        VerticalAlignment="Center">
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        Width="150">
                     <Border.Style>
                         <Style TargetType="{x:Type Border}">
-                            <Setter Property="Background" Value="#12AA0000"/>
-                            <Setter Property="BorderBrush" Value="#33AA0000"/>
-                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Background" Value="#33FF0000" />
+                            <Setter Property="BorderBrush" Value="#FFFF0000" />
+                            <Setter Property="BorderThickness" Value="1" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsConnected}" Value="True">
-                                    <Setter Property="Background" Value="#1200AA00"/>
-                                    <Setter Property="BorderBrush" Value="#3300AA00"/>
+                                    <Setter Property="Background" Value="#3300FF00" />
+                                    <Setter Property="BorderBrush" Value="#FF00FF00" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </Border.Style>
 
-                    <TextBlock>
+                    <TextBlock HorizontalAlignment="Center">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Text" Value="Disconnected"/>
-                                <Setter Property="Foreground" Value="#AA0000"/>
+                                <Setter Property="Text" Value="Disconnected" />
+                                <Setter Property="Foreground" Value="#FF0000" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsConnected}" Value="True">
-                                        <Setter Property="Text" Value="Connected"/>
-                                        <Setter Property="Foreground" Value="#008800"/>
+                                        <Setter Property="Text" Value="Connected" />
+                                        <Setter Property="Foreground" Value="#00FF00" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
                 </Border>
-
             </Grid>
         </Border>
 
@@ -98,8 +111,9 @@
                 CornerRadius="6"
                 BorderBrush="#33000000"
                 BorderThickness="1">
-            
+
             <ListView ItemsSource="{Binding InMessages}"
+                      Style="{StaticResource ListView.Log}"
                       Name="MessagesList"
                       VirtualizingPanel.IsVirtualizing="True"
                       VirtualizingPanel.VirtualizationMode="Recycling"
@@ -125,32 +139,86 @@
                       Command="{Binding CopySelectedCommand}"
                       CommandParameter="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
 
-                      
-                        <Separator/>
+                        <Separator />
                         <MenuItem Header="Clear"
                       Command="{Binding ClearCommand}" />
                     </ContextMenu>
                 </ListView.ContextMenu>
 
-
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Time"
-                                        Width="170"
-                                        DisplayMemberBinding="{Binding TimeStamp}" />
-                        <GridViewColumn Header="Message" Width="Auto">
+
+                        <GridView.ColumnHeaderContainerStyle>
+                            <Style TargetType="{x:Type GridViewColumnHeader}" BasedOn="{StaticResource GridViewColumnHeader.Log}" />
+                        </GridView.ColumnHeaderContainerStyle>
+
+                        <GridViewColumn Header="Time" Width="130">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Text}"
-                                               TextWrapping="Wrap"/>
+                                    <TextBlock Text="{Binding TimeStamp, Converter={StaticResource DateTimeSmartConverter}, ConverterParameter=time}" Style="{StaticResource Text.MonoSecondary}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn Header="Δt" Width="90">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding RelativeTime, Converter={StaticResource RelativeTimeHumanConverter}}" Style="{StaticResource Text.MonoSecondary}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn Header="Message" Width="300">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Text}" TextWrapping="Wrap" Style="{StaticResource Text.Body}" />
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                     </GridView>
                 </ListView.View>
-
             </ListView>
         </Border>
 
+        <!-- Bottom status bar -->
+        <Border Grid.Row="4"
+        Padding="10,8"
+        CornerRadius="6"
+        BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="Total:" VerticalAlignment="Center" Style="{StaticResource Text.Mono}" />
+                <TextBlock Grid.Column="2" Text="{Binding MessageCounter}" FontWeight="SemiBold" VerticalAlignment="Center" Style="{StaticResource Text.MonoSecondary}" />
+
+                <TextBlock Grid.Column="4" Text="Rate:" VerticalAlignment="Center" Style="{StaticResource Text.Mono}" />
+                <TextBlock Grid.Column="6"
+                   Style="{StaticResource Text.MonoSecondary}"
+                   Text="{Binding MessagesPerSecond, StringFormat={}{0:0} msg/s}"
+                   FontWeight="SemiBold"
+                   VerticalAlignment="Center" />
+
+                <TextBlock Grid.Column="8" Text="Last:" VerticalAlignment="Center" Style="{StaticResource Text.Mono}" />
+
+                <StackPanel Grid.Column="10" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding LastReceivedAt, Converter={StaticResource DateTimeSmartConverter}, ConverterParameter=time}"  Style="{StaticResource Text.MonoSecondary}" />
+                    <TextBlock Text="  (Δ "  Style="{StaticResource Text.MonoSecondary}" />
+                    <TextBlock Text="{Binding LastDelta, Converter={StaticResource RelativeTimeHumanConverter}}"  Style="{StaticResource Text.MonoSecondary}" />
+                    <TextBlock Text=")" Style="{StaticResource Text.MonoSecondary}" />
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

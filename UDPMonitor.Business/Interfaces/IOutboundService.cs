@@ -6,7 +6,10 @@
     {
         event OutMessageSentEventHandler OnOutMessageSent;
 
-        void Connect(string ipAddress, int port);
+        int Port { get; set; }
+        string IPAddress { get; set; }
+
+        void Connect();
         void Disconnect();
         void SendMessage(string message);
     }
