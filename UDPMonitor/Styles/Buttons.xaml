@@ -84,6 +84,32 @@
         <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}" />
     </Style>
 
+    <!-- SecondaryImage: flat button che mostra un'icona presa dal Content -->
+<Style x:Key="Button.SecondaryImage"
+       TargetType="{x:Type Button}"
+       BasedOn="{StaticResource Button.Secondary}">
+    <!-- dimensioni “icon button” -->
+    <Setter Property="Width" Value="34"/>
+    <Setter Property="Height" Value="34"/>
+    <Setter Property="Padding" Value="6"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+
+    <!-- interpreta Content come ImageSource -->
+    <Setter Property="ContentTemplate">
+        <Setter.Value>
+            <DataTemplate>
+                <Image Source="{Binding}"
+                       Width="auto"
+                       Height="auto"
+                       Stretch="Uniform"
+                       SnapsToDevicePixels="True"
+                       RenderOptions.BitmapScalingMode="HighQuality" />
+            </DataTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
+    
     <Style x:Key="Button.Primary" TargetType="{x:Type Button}" BasedOn="{StaticResource Button.Base}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="{StaticResource Brush.Accent}" />
@@ -184,5 +210,101 @@
         </Setter>
     </Style>
 
+    <!-- =========================
+     TITLE BAR BUTTONS
+     ========================= -->
+
+    <!-- Base per bottoni della barra (Min/Max/Close) -->
+    <Style x:Key="Button.TitleBarButtonBase" TargetType="{x:Type Button}" BasedOn="{StaticResource Button.Base}">
+        <Setter Property="FontFamily" Value="{StaticResource Font.App}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSize.Body}" />
+        <Setter Property="Foreground" Value="{StaticResource Brush.TextPrimary}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <!-- hover shadow -->
+                        <Border x:Name="ShadowHost" CornerRadius="8" Opacity="0">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="12"
+                                              ShadowDepth="2"
+                                              Opacity="0.30"/>
+                            </Border.Effect>
+                        </Border>
+
+                        <!-- button surface -->
+                        <Border x:Name="Bd"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="8">
+                            <Grid>
+                                <!-- top highlight -->
+                                <Border Margin="1"
+                                    CornerRadius="7"
+                                    VerticalAlignment="Top"
+                                    Height="10"
+                                    Background="White"
+                                    Opacity="0.05"/>
+
+                                <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource Brush.SurfaceRaised}" />
+                            <Setter TargetName="ShadowHost" Property="Opacity" Value="1" />
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="ShadowHost" Property="Opacity" Value="0.35" />
+                            <Setter TargetName="Bd" Property="RenderTransform">
+                                <Setter.Value>
+                                    <TranslateTransform Y="1"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource Brush.TextDisabled}" />
+                            <Setter TargetName="Bd" Property="Background" Value="Transparent" />
+                            <Setter TargetName="ShadowHost" Property="Opacity" Value="0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Bottoni standard (Min/Max/Restore) -->
+    <Style x:Key="Button.TitleBarButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Button.TitleBarButtonBase}">
+        <Setter Property="Width" Value="46"/>
+        <Setter Property="Height" Value="40"/>
+    </Style>
+
+    <!-- Bottone Close: hover “danger” -->
+    <Style x:Key="Button.TitleBarCloseButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Button.TitleBarButtonBase}">
+        <Setter Property="Width" Value="46"/>
+        <Setter Property="Height" Value="40"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource Brush.Danger}" />
+                <Setter Property="Foreground" Value="#FF0F1113" />
+            </Trigger>
+
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{StaticResource Brush.Danger}" />
+                <Setter Property="Foreground" Value="#FF0F1113" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 
 </ResourceDictionary>

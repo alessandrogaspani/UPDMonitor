@@ -1,4 +1,5 @@
 ﻿using Prism.Commands;
+using Prism.Services.Dialogs;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -7,13 +8,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using UDPMonitor.Business.Interfaces;
 using UDPMonitor.ViewModels.Base;
+using static UDPMonitor.App;
 
 namespace UDPMonitor.ViewModels
 {
     public class Outbound_ViewModel : ViewModelBase
     {
         private readonly IOutboundService _outboundService;
-
+        private readonly IDialogService _dialogService;
         private string _textMessage;
 
         public string TextMessage
@@ -71,6 +73,8 @@ namespace UDPMonitor.ViewModels
             set => SetProperty(ref _autoSendHz, value);
         }
 
+       
+
         public DelegateCommand SendCommand { get; private set; }
         public DelegateCommand ToggleConnectionCommand { get; private set; }
 
@@ -82,10 +86,10 @@ namespace UDPMonitor.ViewModels
         private Task _sendLoopTask;
         private string _messageSnapshot;
 
-        public Outbound_ViewModel(IOutboundService outboundService)
+        public Outbound_ViewModel(IOutboundService outboundService, IDialogService dialogService)
         {
             _outboundService = outboundService;
-
+            _dialogService = dialogService;
             Port = _outboundService.Port.ToString();
             IpAddress = _outboundService.IPAddress;
 
@@ -239,6 +243,11 @@ namespace UDPMonitor.ViewModels
         {
             if (IsConnected)
                 _outboundService.SendMessage(TextMessage);
+
+            if(TextMessage == "Alessandro Gaspani")
+            {
+               _dialogService.ShowDialog(RegisteredViews.DialogCreator_View);
+            }
         }
 
         private bool CanSend() => IsConnected && !string.IsNullOrWhiteSpace(TextMessage);

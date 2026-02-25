@@ -1,6 +1,5 @@
 ﻿using Prism.Mvvm;
 using Prism.Regions;
-using System;
 
 namespace UDPMonitor.ViewModels.Base
 {
@@ -10,7 +9,7 @@ namespace UDPMonitor.ViewModels.Base
 
         protected ViewModelBase()
         {
-           InitializeCommands();
+            InitializeCommands();
         }
 
         private void InitializeCommands()

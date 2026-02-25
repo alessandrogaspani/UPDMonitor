@@ -24,104 +24,132 @@
         </Grid.RowDefinitions>
 
         <!-- =========================
-             CONNECTION PANEL
-             ========================= -->
+     CONNECTION PANEL (2 righe: header + controls)
+     ========================= -->
         <Border Grid.Row="0"
-                Padding="10"
-                Style="{StaticResource Panel.Border}">
+        Padding="10"
+        Style="{StaticResource Panel.Border}">
+
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="180"/>
-                    <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="110"/>
-                    <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="150"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0"
+                <!-- HEADER: descrizione + badge -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Orientation="Vertical">
+                        <TextBlock Text="Outbound UDP"
+                           Style="{StaticResource Text.Body}"
+                           FontWeight="SemiBold" />
+
+                        <TextBlock Text="Configure destination and send UDP packets (manual or AutoSend)."
                            Style="{StaticResource Text.Secondary}"
-                           VerticalAlignment="Center"
-                           Text="IP: " />
+                           Margin="0,2,0,0"/>
+                    </StackPanel>
 
-                <TextBox Grid.Column="1"
-                         Style="{StaticResource TextBox.Mono}"
-                         VerticalAlignment="Center"
-                         MinWidth="150"
-                         Text="{Binding IpAddress, UpdateSourceTrigger=PropertyChanged}" />
-
-                <TextBlock Grid.Column="3"
-                           Style="{StaticResource Text.Secondary}"
-                           VerticalAlignment="Center"
-                           Text="Port: " />
-
-                <TextBox Grid.Column="4"
-                         Style="{StaticResource TextBox.Mono}"
-                         VerticalAlignment="Center"
-                         MinWidth="80"
-                         Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}" />
-
-                <!-- Connect/Disconnect -->
-                <Button Grid.Column="6"
-                        VerticalAlignment="Center"
-                        Width="100"
-                        Padding="14,6"
-                        Command="{Binding ToggleConnectionCommand}">
-                    <Button.Style>
-                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Button.Secondary}">
-                            <Setter Property="Content" Value="Connect"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsConnected}" Value="True">
-                                    <Setter Property="Content" Value="Disconnect"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-
-                <!-- Status badge: Connection -->
-                <Border Grid.Column="8"
-                        Padding="10,4"
-                        CornerRadius="10"
-                        Width="150"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Left">
-                    <Border.Style>
-                        <Style TargetType="{x:Type Border}">
-                            <Setter Property="Background" Value="#33FF0000"/>
-                            <Setter Property="BorderBrush" Value="#FFFF0000"/>
-                            <Setter Property="BorderThickness" Value="1"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsConnected}" Value="True">
-                                    <Setter Property="Background" Value="#3300FF00"/>
-                                    <Setter Property="BorderBrush" Value="#FF00FF00"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Border.Style>
-
-                    <TextBlock HorizontalAlignment="Center">
-                        <TextBlock.Style>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Text" Value="Disconnected"/>
-                                <Setter Property="Foreground" Value="#FF0000"/>
+                    <!-- Status badge: Connection -->
+                    <Border Grid.Column="1"
+                    Padding="10,4"
+                    CornerRadius="10"
+                    MinWidth="150"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Right">
+                        <Border.Style>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="Background" Value="#33FF0000"/>
+                                <Setter Property="BorderBrush" Value="#FFFF0000"/>
+                                <Setter Property="BorderThickness" Value="1"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsConnected}" Value="True">
-                                        <Setter Property="Text" Value="Connected"/>
-                                        <Setter Property="Foreground" Value="#00FF00"/>
+                                        <Setter Property="Background" Value="#3300FF00"/>
+                                        <Setter Property="BorderBrush" Value="#FF00FF00"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                </Border>
+                        </Border.Style>
 
+                        <TextBlock HorizontalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Text.Hint}">
+                                    <Setter Property="Text" Value="Disconnected"/>
+                                    <Setter Property="Foreground" Value="#FF0000"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                            <Setter Property="Text" Value="Connected"/>
+                                            <Setter Property="Foreground" Value="#FF00FF00"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Border>
+                </Grid>
+
+                <!-- CONTROLS: IP + porta + bottone -->
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="18"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="110"/>
+                        <ColumnDefinition Width="18"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                       Style="{StaticResource Text.Secondary}"
+                       VerticalAlignment="Center"
+                       Text="IP:" />
+
+                    <TextBox Grid.Column="2"
+                     Style="{StaticResource TextBox.Mono}"
+                     VerticalAlignment="Center"
+                     MinWidth="150"
+                     Text="{Binding IpAddress, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <TextBlock Grid.Column="4"
+                       Style="{StaticResource Text.Secondary}"
+                       VerticalAlignment="Center"
+                       Text="Output port:" />
+
+                    <TextBox Grid.Column="6"
+                     Style="{StaticResource TextBox.Mono}"
+                     VerticalAlignment="Center"
+                     MinWidth="80"
+                     Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <!-- Connect/Disconnect -->
+                    <Button Grid.Column="8"
+                    VerticalAlignment="Center"
+                    Width="120"
+                    Padding="14,6"
+                    Command="{Binding ToggleConnectionCommand}">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Button.Primary}">
+                                <Setter Property="Content" Value="Connect"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                        <Setter Property="Content" Value="Disconnect"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
             </Grid>
         </Border>
+
 
         <!-- =========================
              AUTOSEND PANEL
@@ -162,7 +190,7 @@
                         Command="{Binding ToggleAutoSendCommand}"
                         IsEnabled="{Binding IsConnected}">
                     <Button.Style>
-                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Button.Secondary}">
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Button.Primary}">
                             <Setter Property="Content" Value="Start AutoSend"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsAutoSending}" Value="True">
@@ -224,7 +252,7 @@
                 Padding="6"
                 Style="{StaticResource Panel.Border}"
                 >
-          
+
             <TextBox Text="{Binding TextMessage, UpdateSourceTrigger=PropertyChanged}"
                      Style="{StaticResource TextBox.Editor}"
                      AcceptsReturn="True"
@@ -232,7 +260,24 @@
                      VerticalScrollBarVisibility="Auto"
                      HorizontalScrollBarVisibility="Auto"
                      MinHeight="120"
-                     IsEnabled="{Binding IsConnected}" />
+                     IsEnabled="{Binding IsConnected}">
+
+
+                <TextBox.ContextMenu>
+                    <!-- Bridge: ContextMenu non eredita DataContext -->
+                    <ContextMenu DataContext="{Binding PlacementTarget.DataContext, 
+                              RelativeSource={RelativeSource Self}}" Style="{StaticResource Menu.Secondary}">
+
+                        <MenuItem Header="Cut"  Command="ApplicationCommands.Cut"  Style="{StaticResource MenuItem.Secondary}"/>
+                        <MenuItem Header="Copy" Command="ApplicationCommands.Copy" Style="{StaticResource MenuItem.Secondary}"/>
+                        <MenuItem Header="Paste" Command="ApplicationCommands.Paste" Style="{StaticResource MenuItem.Secondary}"/>
+                        <Separator/>
+                        <MenuItem Header="Select All" Command="ApplicationCommands.SelectAll"  Style="{StaticResource MenuItem.Secondary}"/>
+                        
+                        
+                    </ContextMenu>
+                </TextBox.ContextMenu>
+            </TextBox>
         </Border>
 
         <!-- Bottom bar -->
@@ -262,8 +307,8 @@
             </TextBlock>
 
             <Button Grid.Column="2"
-                    Width="100"
-                    Style="{StaticResource Button.Outline}"
+                    Width="200"
+                    Style="{StaticResource Button.Primary}"
                     Content="Send Message"
                     Command="{Binding SendCommand}"
                     IsEnabled="{Binding IsConnected}" />

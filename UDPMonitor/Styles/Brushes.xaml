@@ -9,7 +9,7 @@
     <FontFamily x:Key="Font.App">Segoe UI</FontFamily>
     <FontFamily x:Key="Font.Mono">Consolas</FontFamily>
 
-    <sys:Double x:Key="FontSize.Body">13</sys:Double>
+    <sys:Double x:Key="FontSize.Body">15</sys:Double>
     <sys:Double x:Key="FontSize.Caption">11</sys:Double>
     <sys:Double x:Key="FontSize.Header">14</sys:Double>
 
@@ -29,7 +29,7 @@
     <Color x:Key="Color.Surface">#FF2A3038</Color>
     <Color x:Key="Color.SurfaceRaised">#FF313845</Color>
     <Color x:Key="Color.SurfaceAlt">#FF384155</Color>
-
+    <Color x:Key="Color.Menu">#173A5E</Color>
 
     <!-- Borders / separators -->
     <Color x:Key="Color.Border">#FF2E2E2E</Color>
@@ -39,6 +39,7 @@
     <Color x:Key="Color.TextPrimary">#FFEAEAEA</Color>
     <Color x:Key="Color.TextSecondary">#FFB6B6B6</Color>
     <Color x:Key="Color.TextDisabled">#FF6F6F6F</Color>
+    <Color x:Key="Color.TextMenu">#FFEAEAEA</Color>
 
     <!-- Accent (Turquoise) -->
     <Color x:Key="Color.Accent">#FF25D0C6</Color>
@@ -65,6 +66,7 @@
     <SolidColorBrush x:Key="Brush.Surface" Color="{StaticResource Color.Surface}"/>
     <SolidColorBrush x:Key="Brush.SurfaceAlt" Color="{StaticResource Color.SurfaceAlt}"/>
     <SolidColorBrush x:Key="Brush.SurfaceRaised" Color="{StaticResource Color.SurfaceRaised}"/>
+    <SolidColorBrush x:Key="Brush.Menu" Color="{StaticResource Color.Menu}"/>
 
     <!-- Borders / lines -->
     <SolidColorBrush x:Key="Brush.Border" Color="{StaticResource Color.Border}"/>
@@ -74,6 +76,7 @@
     <SolidColorBrush x:Key="Brush.TextPrimary" Color="{StaticResource Color.TextPrimary}"/>
     <SolidColorBrush x:Key="Brush.TextSecondary" Color="{StaticResource Color.TextSecondary}"/>
     <SolidColorBrush x:Key="Brush.TextDisabled" Color="{StaticResource Color.TextDisabled}"/>
+    <SolidColorBrush x:Key="Brush.TextMenu" Color="{StaticResource Color.TextMenu}"/>
 
     <!-- Accent -->
     <SolidColorBrush x:Key="Brush.Accent" Color="{StaticResource Color.Accent}"/>

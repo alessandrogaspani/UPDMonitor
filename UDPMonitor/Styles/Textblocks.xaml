@@ -44,6 +44,16 @@
         <Setter Property="TextTrimming" Value="None" />
     </Style>
 
+    <!-- Hint (helper text under controls) -->
+    <Style x:Key="Text.Quote" TargetType="{x:Type TextBlock}">
+        <Setter Property="FontSize" Value="{StaticResource FontSize.Caption}" />
+        <Setter Property="Foreground" Value="{StaticResource Brush.TextSecondary}" />
+        <Setter Property="Opacity" Value="0.95" />
+        <Setter Property="FontStyle" Value="Italic"/>
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="TextTrimming" Value="None" />
+    </Style>
+
     <!-- Header for sections -->
     <Style x:Key="Text.Header" TargetType="{x:Type TextBlock}">
         <Setter Property="FontSize" Value="{StaticResource FontSize.Header}" />

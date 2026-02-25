@@ -18,7 +18,7 @@
         <Setter Property="FontFamily" Value="{StaticResource Font.App}" />
         <Setter Property="FontSize" Value="{StaticResource FontSize.Body}" />
         <Setter Property="Foreground" Value="{StaticResource Brush.TextPrimary}" />
-        <Setter Property="Background" Value="{StaticResource Brush.SurfaceRaised}" />
+        <Setter Property="Background" Value="{StaticResource Brush.Separator}" />
         <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="{StaticResource TextBox.Padding}" />

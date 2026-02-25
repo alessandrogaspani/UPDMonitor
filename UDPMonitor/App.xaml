@@ -13,7 +13,10 @@
                 <ResourceDictionary Source="/Styles/Textboxes.xaml"/>
                 <ResourceDictionary Source="/Styles/Buttons.xaml"/>
                 <ResourceDictionary Source="/Styles/Scrollbars.xaml"/>
+                <ResourceDictionary Source="/Styles/ContextMenu.xaml"/>
                 <ResourceDictionary Source="/Styles/ListViews.xaml"/>
+                <ResourceDictionary Source="/Styles/Menu.xaml"/>
+                <ResourceDictionary Source="/Styles/Icons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

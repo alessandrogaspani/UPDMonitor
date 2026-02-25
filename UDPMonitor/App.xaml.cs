@@ -22,6 +22,8 @@ namespace UDPMonitor
             public const string Inbound_View = "Inbound_View";
             public const string Outbound_View = "Outbound_View";
             public const string DialogDetail_View = "DialogDetail_View";
+            public const string DialogAbout_View = "DialogAbout_View";
+            public const string DialogCreator_View = "DialogCreator_View";
         }
 
         protected override Window CreateShell()
@@ -54,7 +56,11 @@ namespace UDPMonitor
 
         private void RegisterDialogs(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterDialogWindow<DialogWindow_View>();
+
             containerRegistry.RegisterDialog<MessageDetail_View, MessageDetail_ViewModel>(RegisteredViews.DialogDetail_View);
+            containerRegistry.RegisterDialog<About_View, About_ViewModel>(RegisteredViews.DialogAbout_View);
+            containerRegistry.RegisterDialog<Creator_View, Creator_ViewModel>(RegisteredViews.DialogCreator_View);
         }
 
         private static void RegisterServices(IContainerRegistry containerRegistry)

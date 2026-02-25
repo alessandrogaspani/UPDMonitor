@@ -1,14 +1,21 @@
-﻿using Prism.Commands;
+﻿using Microsoft.Win32;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
+using System.IO;
+using System.Text;
 using System.Threading;
 using System.Windows;
 using TBMX.Core.Services;
 using UDPMonitor.Business.Interfaces;
 using UDPMonitor.Business.Models;
+using UDPMonitor.Core;
+using UDPMonitor.Core.Export;
 using UDPMonitor.ViewModels.Base;
 using static UDPMonitor.App;
 
@@ -43,7 +50,6 @@ namespace UDPMonitor.ViewModels
 
     public class Inbound_ViewModel : ViewModelBase
     {
-   
         private ObservableCollection<ODTMessage> _inMessages;
 
         public ObservableCollection<ODTMessage> InMessages
@@ -108,13 +114,27 @@ namespace UDPMonitor.ViewModels
             set { SetProperty(ref _lastDelta, value); }
         }
 
+        private bool _isAutoScrollEnabled;
+
+        public bool IsAutoScrollEnabled
+        {
+            get { return _isAutoScrollEnabled; }
+            set
+            {
+                SetProperty(ref _isAutoScrollEnabled, value);
+            }
+        }
+
         public DelegateCommand ConnectCommand { get; private set; }
         public DelegateCommand ClearCommand { get; private set; }
-        public DelegateCommand<ODTMessage> CopySelectedCommand { get; private set; }
-        public DelegateCommand<ODTMessage> ShowDetailCommand { get; private set; }
+        public DelegateCommand CopySelectedCommand { get; private set; }
+        public DelegateCommand ShowDetailCommand { get; private set; }
+
+        public DelegateCommand ExportCommand { get; private set; }
 
         // interni per calcolo rate
         private long _receivedSinceLastTick;
+
         private Timer _rateTimer;
         private readonly IInboundService _inboundService;
         private readonly IDialogService _dialogService;
@@ -136,7 +156,6 @@ namespace UDPMonitor.ViewModels
                 {
                     MessagesPerSecond = c;
                 });
-
             }, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
         }
 
@@ -146,27 +165,118 @@ namespace UDPMonitor.ViewModels
 
             ConnectCommand = new DelegateCommand(OnConnect);
             ClearCommand = new DelegateCommand(Clear);
-            CopySelectedCommand = new DelegateCommand<ODTMessage>(CopySelected);
-            ShowDetailCommand = new DelegateCommand<ODTMessage>(ShowDetail);
+            CopySelectedCommand = new DelegateCommand(CopySelected);
+            ShowDetailCommand = new DelegateCommand(ShowDetail);
+            ExportCommand = new DelegateCommand(Export);
         }
 
-        private void ShowDetail(ODTMessage message)
+        private const char Sep = ';';
+
+        private void Export()
         {
-            if (message == null) return;
+            var data = InMessages; // oppure MessagesSelected se esporti solo i selezionati
+            if (data == null || data.Count == 0)
+                return;
+
+            string initialDir = ApplicationService.LogFolderPath;
+
+            // Crea la cartella se non esiste (opzionale ma comodo)
+            if (!Directory.Exists(initialDir))
+                Directory.CreateDirectory(initialDir);
+
+            var dlg = new SaveFileDialog
+            {
+                Title = "Export log to CSV",
+                Filter = "CSV file (*.csv)|*.csv|All files (*.*)|*.*",
+                DefaultExt = ".csv",
+                AddExtension = true,
+                OverwritePrompt = true,
+                FileName = $"UDPMonitor_Log_{DateTime.Now:yyyyMMdd_HHmmss}.csv",
+                InitialDirectory = initialDir
+            };
+
+            bool? result = dlg.ShowDialog(); // owner opzionale
+            if (result != true)
+                return;
+
+            var filePath = dlg.FileName;
+
+            // Usa UTF8 per evitare problemi con accenti/caratteri speciali
+            data.ToCSV(
+                filePath,
+                buildContent: BuildCsvContent,
+                buildHeader: _ => $"TimeStamp{Sep}RelativeTime{Sep}Text",
+                encoding: Encoding.UTF8);
+        }
+
+        private static string BuildCsvContent(IList<ODTMessage> messages)
+        {
+            var sb = new StringBuilder();
+
+            for (int i = 0; i < messages.Count; i++)
+            {
+                var m = messages[i];
+
+                sb.Append(CsvEscape(m.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture)));
+                sb.Append(Sep);
+
+                sb.Append(CsvEscape(FormatRelative(m.RelativeTime)));
+                sb.Append(Sep);
+
+                sb.Append(CsvEscape(m.Text));
+
+                // newline tra record
+                if (i < messages.Count - 1)
+                    sb.Append(Environment.NewLine);
+            }
+
+            return sb.ToString();
+        }
+
+        private static string FormatRelative(TimeSpan ts)
+        {
+            // hh:mm:ss.fff
+            return ts.ToString(@"hh\:mm\:ss\.fff", CultureInfo.InvariantCulture);
+        }
+
+        private static string CsvEscape(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return string.Empty;
+
+            // Se contiene separatore, virgolette o newline => va quotato
+            bool mustQuote =
+                value.IndexOf(Sep) >= 0 ||
+                value.IndexOf('"') >= 0 ||
+                value.IndexOf('\r') >= 0 ||
+                value.IndexOf('\n') >= 0;
+
+            if (!mustQuote)
+                return value;
+
+            // raddoppia le virgolette interne
+            value = value.Replace("\"", "\"\"");
+
+            return $"\"{value}\"";
+        }
+
+        private void ShowDetail()
+        {
+            if (MessageSelected == null) return;
 
             var dialogParameters = new DialogParameters
                 {
-                    { "message", message }
+                    { "message", MessageSelected }
                 };
 
             _dialogService.ShowDialog(RegisteredViews.DialogDetail_View, dialogParameters, null);
         }
 
-        private static void CopySelected(ODTMessage message)
+        private void CopySelected()
         {
-            if (message == null) return;
+            if (MessageSelected == null) return;
 
-            Clipboard.SetText($"{message.Text}");
+            Clipboard.SetText($"{MessageSelected.Text}");
         }
 
         private void Clear()
@@ -206,7 +316,7 @@ namespace UDPMonitor.ViewModels
             DateTime? last = null;
 
             if (InMessages.Count > 0)
-                last = InMessages[^1].TimeStamp;
+                last = InMessages[0].TimeStamp;
 
             var delta = last.HasValue
                 ? (message.TimeStamp - last.Value)
@@ -225,7 +335,7 @@ namespace UDPMonitor.ViewModels
             {
                 const int MaxItems = 2000;
 
-                InMessages.Insert(0,odtMessage);
+                InMessages.Insert(0, odtMessage);
 
                 if (InMessages.Count > MaxItems)
                     InMessages.RemoveAt(InMessages.Count - 1);

@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+   
+    <!-- GitHub -->
+    <BitmapImage x:Key="Icon.GitHub"
+                 UriSource="pack://application:,,,/UDPMonitor;component/Assets/github-logo-icon.png"
+                 CacheOption="OnLoad" />
+
+    <!-- App / UDP logo -->
+    <BitmapImage x:Key="Icon.UDPLogo"
+                 UriSource="pack://application:,,,/UDPMonitor;component/Assets/UDPLogo.png"
+                 CacheOption="OnLoad" />
+
+    <!-- App / UDP logo -->
+    <BitmapImage x:Key="Icon.Creator"
+                UriSource="pack://application:,,,/UDPMonitor;component/Assets/Creator_small.jpg"
+                CacheOption="OnLoad" />
+
+</ResourceDictionary>
