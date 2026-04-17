@@ -4,5 +4,6 @@
     {
         public const string InboundRegion = "InboundRegion";
         public const string OutboundRegion = "OutboundRegion";
+        public const string Otherregion = "Otherregion";
     }
 }

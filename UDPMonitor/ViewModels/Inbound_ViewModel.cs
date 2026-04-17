@@ -138,7 +138,7 @@ namespace UDPMonitor.ViewModels
         private Timer _rateTimer;
         private readonly IInboundService _inboundService;
         private readonly IDialogService _dialogService;
-
+        
         public Inbound_ViewModel(IInboundService inboundService, IDialogService dialogService)
         {
             _inboundService = inboundService;

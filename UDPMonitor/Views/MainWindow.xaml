@@ -102,6 +102,7 @@
         <Grid Grid.Row="1" Background="{StaticResource Brush.Surface}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
@@ -109,6 +110,8 @@
                             prism:RegionManager.RegionName="{x:Static local:RegionNames.InboundRegion}" />
             <ContentControl Grid.Column="1"
                             prism:RegionManager.RegionName="{x:Static local:RegionNames.OutboundRegion}" />
+            <ContentControl Grid.Column="2"
+                 prism:RegionManager.RegionName="{x:Static local:RegionNames.Otherregion}" />
         </Grid>
     </Grid>
 </Window>

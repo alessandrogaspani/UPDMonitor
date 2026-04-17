@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UDPMonitor.Core", "UDPMonit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UDPMonitor.Business", "UDPMonitor.Business\UDPMonitor.Business.csproj", "{8DD14D00-5A76-406D-A1C1-DD0BBD31944D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UDPMonitor.Tests", "UDPMonitor.Tests\UDPMonitor.Tests.csproj", "{0958D0B2-F76A-4955-8ECC-6F03216258BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{8DD14D00-5A76-406D-A1C1-DD0BBD31944D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DD14D00-5A76-406D-A1C1-DD0BBD31944D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DD14D00-5A76-406D-A1C1-DD0BBD31944D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0958D0B2-F76A-4955-8ECC-6F03216258BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0958D0B2-F76A-4955-8ECC-6F03216258BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0958D0B2-F76A-4955-8ECC-6F03216258BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0958D0B2-F76A-4955-8ECC-6F03216258BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
