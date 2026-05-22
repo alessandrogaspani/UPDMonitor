@@ -1,7 +1,5 @@
 # UDPMonitor
 
-# UDPMonitor
-
 UDPMonitor is a WPF desktop application for monitoring and displaying incoming and outgoing UDP messages. The solution is organized into multiple projects to separate core utilities, business services and the UI. Automated tests are included.
 
 ## Projects overview
