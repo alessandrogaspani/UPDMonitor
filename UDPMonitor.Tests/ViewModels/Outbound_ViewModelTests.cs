@@ -10,17 +10,36 @@ public sealed class Outbound_ViewModelTests
     private readonly Mock<IOutboundService> _mockOutboundService;
     private readonly Mock<IDialogService> _mockDialogService;
 
+    private const int DefaultPort = 5000;
+    private const string DefaultIpAddress = "127.0.0.1";
+
     public Outbound_ViewModelTests()
     {
         _mockOutboundService = new Mock<IOutboundService>();
         _mockDialogService = new Mock<IDialogService>();
-
-        _mockOutboundService.Setup(s => s.Port).Returns(5000);
-        _mockOutboundService.Setup(s => s.IPAddress).Returns("127.0.0.1");
     }
 
     private Outbound_ViewModel CreateViewModel()
-        => new(_mockOutboundService.Object, _mockDialogService.Object);
+    {
+        _mockOutboundService.Setup(s => s.Port).Returns(DefaultPort);
+        _mockOutboundService.Setup(s => s.IPAddress).Returns(DefaultIpAddress);
+        return new(_mockOutboundService.Object, _mockDialogService.Object);
+    }
+
+    private void AllowConnectionConfiguration()
+    {
+        _mockOutboundService.SetupSet(s => s.Port = It.IsAny<int>());
+        _mockOutboundService.SetupSet(s => s.IPAddress = It.IsAny<string>());
+    }
+
+    private Outbound_ViewModel CreateConnectedViewModel()
+    {
+        AllowConnectionConfiguration();
+
+        var vm = CreateViewModel();
+        vm.ToggleConnectionCommand.Execute();
+        return vm;
+    }
 
     [Trait("Category", "Unit")]
     [Fact]
@@ -39,8 +58,7 @@ public sealed class Outbound_ViewModelTests
     [Fact]
     public void ConnectCommand_WhenDisconnected_CallsConnectAndSetsConnected()
     {
-        _mockOutboundService.SetupSet(s => s.Port = It.IsAny<int>());
-        _mockOutboundService.SetupSet(s => s.IPAddress = It.IsAny<string>());
+        AllowConnectionConfiguration();
 
         var vm = CreateViewModel();
 
@@ -56,12 +74,8 @@ public sealed class Outbound_ViewModelTests
     [Fact]
     public void ToggleConnectionCommand_WhenConnected_CallsDisconnectAndSetsDisconnected()
     {
-        _mockOutboundService.SetupSet(s => s.Port = It.IsAny<int>());
-        _mockOutboundService.SetupSet(s => s.IPAddress = It.IsAny<string>());
+        var vm = CreateConnectedViewModel();
 
-        var vm = CreateViewModel();
-
-        vm.ToggleConnectionCommand.Execute();
         vm.ToggleConnectionCommand.Execute();
 
         _mockOutboundService.Verify(s => s.Disconnect(), Times.Once);
@@ -72,12 +86,8 @@ public sealed class Outbound_ViewModelTests
     [Fact]
     public void SendCommand_WhenConnectedAndHasText_CallsSendMessage()
     {
-        _mockOutboundService.SetupSet(s => s.Port = It.IsAny<int>());
-        _mockOutboundService.SetupSet(s => s.IPAddress = It.IsAny<string>());
+        var vm = CreateConnectedViewModel();
 
-        var vm = CreateViewModel();
-
-        vm.ToggleConnectionCommand.Execute();
         vm.TextMessage = "hello";
         vm.SendCommand.Execute();
 
