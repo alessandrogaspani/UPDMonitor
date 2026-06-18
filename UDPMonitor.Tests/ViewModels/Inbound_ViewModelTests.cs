@@ -13,18 +13,22 @@ public sealed class Inbound_ViewModelTests
     private readonly Mock<IInboundService> _mockInboundService;
     private readonly Mock<IDialogService> _mockDialogService;
 
+    private const int DefaultPort = 9000;
+
     public Inbound_ViewModelTests()
     {
         _mockInboundService = new Mock<IInboundService>();
         _mockDialogService = new Mock<IDialogService>();
-
-        // Setup del comportamento di default: Port restituisce 9000.
-        // Senza questo, Port avrebbe il valore default di int (0).
-        _mockInboundService.Setup(s => s.Port).Returns(9000);
     }
 
     private Inbound_ViewModel CreateViewModel()
-        => new(_mockInboundService.Object, _mockDialogService.Object);
+    {
+        _mockInboundService.Setup(s => s.Port).Returns(DefaultPort);
+        return new(_mockInboundService.Object, _mockDialogService.Object);
+    }
+
+    private void AllowPortAssignment()
+        => _mockInboundService.SetupSet(s => s.Port = It.IsAny<int>());
 
     [Trait("Category", "Unit")]
     [Fact]
@@ -64,12 +68,12 @@ public sealed class Inbound_ViewModelTests
     [Fact]
     public void ConnectCommand_WhenConnected_CallsStopListen()
     {
-        _mockInboundService.SetupSet(s => s.Port = It.IsAny<int>());
+        AllowPortAssignment();
 
         var vm = CreateViewModel();
 
-        vm.ConnectCommand.Execute(); // connette
-        vm.ConnectCommand.Execute(); // disconnette
+        vm.ConnectCommand.Execute();
+        vm.ConnectCommand.Execute();
 
         _mockInboundService.Verify(s => s.StopListen(), Times.Once);
         Assert.False(vm.IsConnected);
@@ -81,7 +85,6 @@ public sealed class Inbound_ViewModelTests
     {
         var vm = CreateViewModel();
 
-        // Simuliamo che ci siano messaggi: aggiungiamo direttamente
         vm.InMessages.Add(new ODTMessage { Text = "test" });
         vm.MessageCounter = 5;
 
@@ -110,8 +113,6 @@ public sealed class Inbound_ViewModelTests
                 Text = "hello UDP"
             };
 
-            // Raise: simula il lancio dell'evento dal service,
-            // come se avesse ricevuto un pacchetto UDP reale.
             _mockInboundService.Raise(
                 s => s.OnInboundMessageReceived += null,
                 message);

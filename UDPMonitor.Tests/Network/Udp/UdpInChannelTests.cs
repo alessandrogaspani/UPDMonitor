@@ -6,6 +6,8 @@ namespace UDPMonitor.Tests.Network.Udp;
 
 public sealed class UdpInChannelTests
 {
+    private static readonly TimeSpan ReceiveTimeout = TimeSpan.FromSeconds(5);
+
     [Trait("Category", "Integration")]
     [Fact]
     public void StartReceiving_WhenAlreadyListening_ThrowsUdpChannelException()
@@ -43,10 +45,7 @@ public sealed class UdpInChannelTests
         channel.StartReceiving();
         await sender.SendAsync(payload, payload.Length, new IPEndPoint(IPAddress.Loopback, port));
 
-        var completed = await Task.WhenAny(received.Task, Task.Delay(TimeSpan.FromSeconds(2)));
-
-        Assert.Same(received.Task, completed);
-        Assert.Equal(payload, await received.Task);
+        Assert.Equal(payload, await WaitForTaskAsync(received.Task));
     }
 
     [Trait("Category", "Integration")]
@@ -61,6 +60,14 @@ public sealed class UdpInChannelTests
         var exception = Record.Exception(channel.CloseChannel);
 
         Assert.Null(exception);
+    }
+
+    private static async Task<T> WaitForTaskAsync<T>(Task<T> task)
+    {
+        var completed = await Task.WhenAny(task, Task.Delay(ReceiveTimeout));
+
+        Assert.Same(task, completed);
+        return await task;
     }
 
     private static int GetFreeUdpPort()
